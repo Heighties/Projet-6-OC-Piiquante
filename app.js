@@ -6,12 +6,18 @@ const sauceRoutes = require('./routes/sauces');
 const userRoutes = require('./routes/user');
 const path = require('path');
 
+const dotenv = require('dotenv');
 
-mongoose.connect('mongodb+srv://Heighties:Familleusa64@cluster0.a4ehysa.mongodb.net/?retryWrites=true&w=majority',
-  { useNewUrlParser: true,
-    useUnifiedTopology: true })
-  .then(() => console.log('Connexion à MongoDB réussie !'))
-  .catch(() => console.log('Connexion à MongoDB échouée !'));
+dotenv.config();
+
+
+mongoose.connect(process.env.DB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log('Connexion à MongoDB réussie !'))
+.catch(() => console.log('Connexion à MongoDB échouée !'));
+
 
 const app = express();
 
