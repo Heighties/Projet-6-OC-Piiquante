@@ -6,6 +6,9 @@ const sauceRoutes = require('./routes/sauces');
 const userRoutes = require('./routes/user');
 const path = require('path');
 
+const helmet = require('helmet');
+const nocache = require('nocache');
+
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -30,6 +33,8 @@ app.use((req, res, next) => {
 
 
 app.use(bodyParser.json());
+// app.use(helmet());
+app.use(nocache());
 
 app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
