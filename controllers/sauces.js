@@ -113,6 +113,12 @@ exports.likeDislike = (req, res, next) => {
   
     // Si utilisateur like
     if (like === 1) { 
+      Sauce.findOne({
+        _id: sauceId
+      })
+      .then((sauce) => {
+        // Si l'utilisateur annule son like
+        if (! sauce.usersLiked.includes(userId)) {
       Sauce.updateOne({
           _id: sauceId
         }, {
@@ -131,9 +137,17 @@ exports.likeDislike = (req, res, next) => {
         .catch((error) => res.status(400).json({
           error
         }))
-    }
+      }
+    })
+      }
     // Si utilisateur dislike
     if (like === -1) {
+      Sauce.findOne({
+        _id: sauceId
+      })
+      .then((sauce) => {
+        // Si l'utilisateur annule son like
+        if (! sauce.usersLiked.includes(userId)) {
       Sauce.updateOne( 
           {
             _id: sauceId
@@ -155,6 +169,8 @@ exports.likeDislike = (req, res, next) => {
         .catch((error) => res.status(400).json({
           error
         }))
+      }
+    })
     }
     // Annulation d'un like ou dislike
     if (like === 0) { 
