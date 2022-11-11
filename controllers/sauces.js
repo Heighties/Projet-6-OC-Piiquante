@@ -1,16 +1,18 @@
 const Sauce = require('../models/Sauce');
 const fs = require('fs');
 
+
+// Création d'une nouvelle sauce
 exports.createSauce = (req, res, next) => {
-  // Stockage dans une const des données reçues du front sous forme de form-data -> transformation en objet js
+  // Stock des données reçues sous forme de form-data et transforme en objet JS
     const sauceObject = JSON.parse(req.body.sauce);
-    // Suppression de l'id renvoyé par le front end pour le remplacer par celui de la base de donnée MongoDB
+    // Suppression de l'id  pour le remplacer par celui de la base de donnée MongoDB
     delete sauceObject._id;
-    // delete sauceObject._userId;
+    
     // Création d'une instance du modèle Sauce
     const sauce = new Sauce({
         ...sauceObject,
-        // userId: req.auth.userId,
+        
         // Modification de l'URL de l'image
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
         likes: 0,
@@ -23,6 +25,8 @@ exports.createSauce = (req, res, next) => {
     .catch(error => { res.status(400).json( { error })})
 };
 
+
+// Modification d'une sauce
 exports.modifySauce = (req, res, next) => {
     let sauceObject = {};
     req.file ? (
@@ -35,7 +39,7 @@ exports.modifySauce = (req, res, next) => {
         fs.unlinkSync(`images/${filename}`)
       }),
       sauceObject = {
-        // Modification des données et ajout de la nouvelle image
+        // Modification et ajout de la nouvelle image
         ...JSON.parse(req.body.sauce),
         imageUrl: `${req.protocol}://${req.get('host')}/images/${
           req.file.filename
@@ -63,13 +67,15 @@ exports.modifySauce = (req, res, next) => {
       }))
   }
 
+
+  //Supression d'une sauce
   exports.deleteSauce = (req, res, next) => {
     // Recherche de l'URL de l'image afin de supprimer le fichier avant suppression de l'objet
     Sauce.findOne({
         _id: req.params.id
       })
       .then(sauce => {
-        // Pour extraire ce fichier, on récupère l'url de la sauce, et on le split autour de la chaine de caractères, donc le nom du fichier
+        // Récupération de l'url de la sauce
         const filename = sauce.imageUrl.split('/images/')[1];
         // Avec ce nom de fichier, on appelle unlink pour suppr le fichier
         fs.unlink(`images/${filename}`, () => {

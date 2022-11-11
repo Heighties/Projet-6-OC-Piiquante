@@ -2,6 +2,8 @@ const passwordValidator = require('password-validator');
 
 const passwordSchema = new passwordValidator();
 
+// Schéma de contrainte de mot de passe
+
 passwordSchema
 .is().min(8)                                    // Longueur minimun : 8
 .has().uppercase()                              // Doit avoir au moins une majuscule

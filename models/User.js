@@ -3,6 +3,8 @@ require('mongoose-type-email');
 const uniqueValidator = require('mongoose-unique-validator');
 const sanitizerPlugin = require('mongoose-sanitizer-plugin');
 
+// Schéma mongoose utilisateur
+
 const userSchema = mongoose.Schema({
   email: { type: String, required: [true, "Veuillez entrer votre adresse email"], unique: true, 
   match: [/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/, "Veuillez entrer une adresse email correcte"] },

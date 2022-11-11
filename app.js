@@ -12,10 +12,10 @@ const nocache = require('nocache');
 const dotenv = require('dotenv');
 const rateLimit = require('express-rate-limit')
 
-
+//dotenv masque les informations de connexion à la base de données
 dotenv.config();
 
-
+//Connexion à la base de données
 mongoose.connect(process.env.DB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -23,16 +23,18 @@ mongoose.connect(process.env.DB_URI, {
 .then(() => console.log('Connexion à MongoDB réussie !'))
 .catch(() => console.log('Connexion à MongoDB échouée !'));
 
-
+//Création de l'app express
 const app = express();
 
+// rateLimit empêche les attaques brute force (trop de requetes provenant de la même adresse IP)
 const limiter = rateLimit({
-	windowMs: 1 * 60 * 1000, // 15 minutes
-	max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
-	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+	windowMs: 1 * 60 * 1000, 
+	max: 100, 
+	standardHeaders: true, 
+	legacyHeaders: false,
 })
 
+// Débloquer certaines sécurité CORS
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
@@ -40,18 +42,20 @@ app.use((req, res, next) => {
     next();
 });
 
-
+// Extraction objet JSON pour gérer les POST
 app.use(bodyParser.json());
-// app.use(helmet());
+
+
+//Sécurise l'application (en têtes, requetes HTTP, controle de DNS, protection XSS...)
 app.use(
   helmet({
     crossOriginResourcePolicy: false,
   })
 );
 app.use(limiter)
-
+//Désactive la mise en cache du navigateur
 app.use(nocache());
-
+//Routes :
 app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
 app.use('/images', express.static(path.join(__dirname, 'images')));
