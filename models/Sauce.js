@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const sanitizerPlugin = require('mongoose-sanitizer-plugin');
-const sauceValidation = require('../middleware/sauceValidation');
+
 
 //Schéma mongoose des sauces
 
