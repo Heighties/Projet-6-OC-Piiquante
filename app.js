@@ -42,6 +42,7 @@ app.use((req, res, next) => {
     next();
 });
 
+
 // Extraction objet JSON pour gérer les POST
 app.use(bodyParser.json());
 
